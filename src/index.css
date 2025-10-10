@@ -2,3 +2,7 @@
 * {
   outline: none;
 }
+
+.corner-scoop {
+  corner-shape: scoop;
+}
