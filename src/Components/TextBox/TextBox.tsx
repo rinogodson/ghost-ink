@@ -1,6 +1,7 @@
 import React from "react";
 
-function TextBox({ toggled }: { toggled?: boolean }) {
+//function TextBox({ toggled }: { toggled?: boolean }) {
+function TextBox() {
   const [showed, setShowed] = React.useState<boolean>(true);
   return (
     <>
