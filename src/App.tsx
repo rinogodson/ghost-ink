@@ -2,6 +2,7 @@ import { Eye, Feather } from "lucide-react";
 import PasswordBox from "./Components/PasswordBox/PasswordBox";
 import TextBox from "./Components/TextBox/TextBox";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 function App() {
   const [inputState, setInputState] = useState<boolean>(false);
@@ -20,12 +21,14 @@ function App() {
             }}
             style={{
               color: inputState ? "white" : "#AEDEEC",
+              background: inputState
+                ? "linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)"
+                : "linear-gradient(to bottom, rgba(174,222,236,0.2), transparent)",
+              boxShadow: inputState
+                ? "inset 0px 1px 1px 1px rgba(255,255,255,0.1), 0px 1px 1px 1px rgba(0,0,0,0.1)"
+                : "inset 0px 1px 1px 1px rgba(255,255,255,0.1), 0px 1px 1px 1px rgba(0,0,0,0.1), inset 0px 0px 40px 2px rgba(174,222,236,0.2), inset 0px 0px 2px 2px rgba(174,222,236,0.8)",
             }}
-            className={
-              inputState
-                ? "flex flex-col justify-center items-center text-white w-full  bg-linear-to-b from-[rgba(255,255,255,0.1)] shadow-[inset_0px_1px_1px_1px_rgba(255,255,255,0.1),_0px_1px_1px_1px_rgba(0,0,0,0.1)] rounded-[4em]"
-                : "flex flex-col justify-center items-center text-[#AEDEEC] w-full  bg-linear-to-b from-[rgba(174,222,236,0.2)] shadow-[inset_0px_1px_1px_1px_rgba(255,255,255,0.1),_0px_1px_1px_1px_rgba(0,0,0,0.1),_inset_0px_0px_3px_2px_rgba(174,222,236,0.2)] rounded-[4em]"
-            }
+            className="cursor-pointer flex flex-col justify-center items-center rounded-[4em] transition-all duration-300"
           >
             <Feather size={40} />
             <p>Hide</p>
@@ -34,24 +37,62 @@ function App() {
             onClick={() => {
               setInputState(true);
             }}
-            className={
-              !inputState
-                ? "flex flex-col justify-center items-center text-white w-full  bg-linear-to-b from-[rgba(255,255,255,0.1)] shadow-[inset_0px_1px_1px_1px_rgba(255,255,255,0.1),_0px_1px_1px_1px_rgba(0,0,0,0.1)] rounded-[4em]"
-                : "flex flex-col justify-center items-center text-[#AEDEEC] w-full  bg-linear-to-b from-[rgba(174,222,236,0.2)] shadow-[inset_0px_1px_1px_1px_rgba(255,255,255,0.1),_0px_1px_1px_1px_rgba(0,0,0,0.1),_inset_0px_0px_3px_2px_rgba(174,222,236,0.2)] rounded-[4em]"
-            }
+            style={{
+              color: !inputState ? "white" : "#AEDEEC",
+              background: !inputState
+                ? "linear-gradient(to bottom, rgba(255,255,255,0.1), transparent)"
+                : "linear-gradient(to bottom, rgba(174,222,236,0.2), transparent)",
+              boxShadow: !inputState
+                ? "inset 0px 1px 1px 1px rgba(255,255,255,0.1), 0px 1px 1px 1px rgba(0,0,0,0.1)"
+                : "inset 0px 1px 1px 1px rgba(255,255,255,0.1), 0px 1px 1px 1px rgba(0,0,0,0.1), inset 0px 0px 40px 2px rgba(174,222,236,0.2), inset 0px 0px 2px 2px rgba(174,222,236,0.8)",
+            }}
+            className="cursor-pointer flex flex-col justify-center items-center rounded-[4em] transition-all duration-300"
           >
             <Eye size={40} />
             <p>Reveal</p>
           </div>
         </div>
 
-        <div className="h-fit w-full px-3 sm:w-100">
-          <TextBox />
-        </div>
-        <div className="h-fit w-full px-3 sm:w-100 flex justify-center">
-          <PasswordBox />
-        </div>
-        <div className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain w-30 rounded-full aspect-square absolute bottom-0 translate-y-15 animate-spin hover:scale-110 active:scale-90 transition-all duration-400 cursor-pointer bg-no-repeat active:brightness-200 hover:brightness-110"></div>
+        <AnimatePresence mode="wait">
+          {!inputState ? (
+            <motion.div
+              key={"jdk"}
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              exit={{ scaleY: 0, opacity: 0 }}
+              transition={{ duration: 0.3, type: "spring" }}
+              className="gap-8 flex flex-col origin-top"
+            >
+              <div className="h-fit w-full px-3 sm:w-100">
+                <TextBox />
+              </div>
+              <div className="h-fit w-full px-3 sm:w-100 flex justify-center">
+                <PasswordBox />
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={"jd"}
+              initial={{ scaleY: 1.1, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              exit={{ scaleY: 1.1, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="text-2xl text-white/50 origin-top"
+            >
+              Click the orb to
+              <br />
+              paste the copied text.
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div
+          style={{
+            bottom: !inputState ? "-3.75em" : "calc(100% / 4)",
+            width: !inputState ? "7.5em" : "10em",
+          }}
+          className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin hover:scale-110 active:scale-90 transition-all duration-400 cursor-pointer bg-no-repeat active:brightness-200 hover:brightness-110"
+        ></div>
       </div>
     </div>
   );
