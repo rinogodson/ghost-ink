@@ -4,27 +4,31 @@ function TextBox({ toggled }: { toggled?: boolean }) {
   const [showed, setShowed] = React.useState<boolean>(true);
   return (
     <>
-      {showed ? (
-        <div className="w-full h-full bg-[#1b2847] text-white text-3xl border-15 focus-within:border-5 transition-all duration-300 border-solid border-gray-700 rounded-4xl">
-          <textarea
-            className="w-full h-full p-5 resize-none"
-            placeholder="Text everyone sees."
-          />
-        </div>
-      ) : (
-        <div className="w-full h-full bg-gray-900 text-white text-3xl border-5 border-dashed border-gray-700 rounded-4xl">
-          <textarea
-            className="w-full h-full p-5 resize-none"
-            placeholder="Secret Text."
-          />
-        </div>
-      )}
-      <button
-        className="bg-red-400 absolute bottom-0"
-        onClick={() => setShowed(!showed)}
+      <div
+        style={{
+          background: showed ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+          border: showed
+            ? "solid 3px rgba(255,255,255,0.2)"
+            : "dashed 3px rgba(255,255,255,0.2)",
+        }}
+        className="w-full h-40 text-white text-2xl transition-all duration-300 rounded-xl [corner-shape:_squircle]"
       >
-        toggle
-      </button>
+        <textarea
+          className="font-[Merriweather] w-full h-full p-5 resize-none"
+          placeholder={showed ? "Text Everyone sees." : "Secret text."}
+        />
+      </div>
+      <div className="flex justify-end items-center gap-5 mt-4">
+        <p className="text-white/50">
+          Switch to {showed ? "Secret Text" : "Public Text"}
+        </p>
+        <button
+          className="bg-linear-to-t from-[rgba(255,255,255,0.1)] to-[rgba(255,255,255,0.2)] transition-all duration-200 active:from-[rgba(255,255,255,0.2)] active:to-[rgba(255,255,255,0.3)] border-1 border-solid border-[rgba(255,255,255,0.1)] text-white px-4 py-2 text-2xl w-fit rounded-3xl [corner-shape:_squircle]"
+          onClick={() => setShowed(!showed)}
+        >
+          FLIP
+        </button>
+      </div>
     </>
   );
 }
