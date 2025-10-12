@@ -12,12 +12,14 @@ function App() {
   const [textCtx, setTextCtx] = useState<{
     isPublic: boolean;
     text: { publicText: string; privateText: string };
+    pass: string;
   }>({
     isPublic: true,
     text: {
       publicText: "",
       privateText: "",
     },
+    pass: "",
   });
   return (
     <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
@@ -78,7 +80,7 @@ function App() {
                 <TextBox textCtx={textCtx} setTextCtx={setTextCtx} />
               </div>
               <div className="h-fit w-full px-3 sm:w-100 flex justify-center">
-                <PasswordBox />
+                <PasswordBox textCtx={textCtx} setTextCtx={setTextCtx} />
               </div>
             </motion.div>
           ) : (

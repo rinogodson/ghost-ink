@@ -1,5 +1,15 @@
 import { KeyRound } from "lucide-react";
-function PasswordBox() {
+function PasswordBox({
+  textCtx,
+  setTextCtx,
+}: {
+  textCtx: {
+    isPublic: boolean;
+    text: { publicText: string; privateText: string };
+    pass: string;
+  };
+  setTextCtx: any;
+}) {
   return (
     <>
       <div
@@ -10,6 +20,10 @@ function PasswordBox() {
         className="flex justify-between pr-5 items-center w-full h-fit text-white text-2xl transition-all duration-300 rounded-xl [corner-shape:_squircle] shadow-[inset_0px_2px_1px_1px_rgba(0,0,0,0.1)]"
       >
         <input
+          value={textCtx.pass}
+          onChange={(e) =>
+            setTextCtx((p: typeof textCtx) => ({ ...p, pass: e.target.value }))
+          }
           type="text"
           className="font-[Merriweather] w-full h-full p-5 resize-none"
           placeholder={"Password (Optional)"}

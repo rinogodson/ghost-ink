@@ -8,6 +8,7 @@ function TextBox({
   textCtx: {
     isPublic: boolean;
     text: { publicText: string; privateText: string };
+    pass: string;
   };
   setTextCtx: any;
 }) {
