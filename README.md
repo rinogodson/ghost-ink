@@ -1,4 +1,5 @@
 <img width="836" height="279" alt="image" src="https://github.com/user-attachments/assets/349103ca-7fc1-42a6-8a1d-b353a8ce559d" />
+
 # 👻 Ghost Ink
 *Magically Hide your secret messages inside other messages with a password!*
 
