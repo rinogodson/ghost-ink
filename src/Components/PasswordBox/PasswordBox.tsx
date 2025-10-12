@@ -21,9 +21,13 @@ function PasswordBox({
       >
         <input
           value={textCtx.pass}
-          onChange={(e) =>
-            setTextCtx((p: typeof textCtx) => ({ ...p, pass: e.target.value }))
-          }
+          onChange={(e) => {
+            if (e.target.value.length < 5)
+              setTextCtx((p: typeof textCtx) => ({
+                ...p,
+                pass: e.target.value,
+              }));
+          }}
           type="text"
           className="font-[Merriweather] w-full h-full p-5 resize-none"
           placeholder={"Password (Optional)"}

@@ -37,15 +37,30 @@ function TextBox({
               : textCtx.text.privateText
           }
           onChange={(e) => {
-            if (textCtx.isPublic) {
+            const newValue = e.target.value;
+            const allowed =
+              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,:;!?@#$/\\'\"()[]{}<>-_+=*%^&";
+
+            if (newValue === "") {
               setTextCtx((p: typeof textCtx) => ({
                 ...p,
-                text: { ...p.text, publicText: e.target.value },
+                text: textCtx.isPublic
+                  ? { ...p.text, publicText: "" }
+                  : { ...p.text, privateText: "" },
               }));
-            } else {
+              return;
+            }
+
+            const isValid = [...newValue].every((char) =>
+              allowed.includes(char),
+            );
+
+            if (isValid) {
               setTextCtx((p: typeof textCtx) => ({
                 ...p,
-                text: { ...p.text, privateText: e.target.value },
+                text: textCtx.isPublic
+                  ? { ...p.text, publicText: newValue }
+                  : { ...p.text, privateText: newValue },
               }));
             }
           }}

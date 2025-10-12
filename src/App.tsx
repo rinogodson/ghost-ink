@@ -1,14 +1,39 @@
-import { ArrowUpRight, Copy, Eye, Feather } from "lucide-react";
+import { ArrowUpRight, Copy, Eye, Feather, Lock } from "lucide-react";
 import PasswordBox from "./Components/PasswordBox/PasswordBox";
 import TextBox from "./Components/TextBox/TextBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Modal from "./Components/Modal/Modal";
+import {
+  makeSecretText,
+  extractSecretText,
+  doesItHaveAPasswordBro,
+} from "./Logic/services";
 
 function App() {
   const [inputState, setInputState] = useState<boolean>(false);
   // false for hide and true for reveal
   //
+
+  useEffect(() => {
+    window.navigator.clipboard.readText();
+  }, []);
+
+  const [bucket, setBucket] = useState<string>("");
+  const [decryptCtx, setDecryptCtx] = useState<{
+    hasPass: boolean;
+    resultText: string;
+    passwordInput: string;
+  }>({
+    hasPass: false,
+    resultText: "",
+    passwordInput: "",
+  });
+
+  const [modalCtx, setModalCtx] = useState({
+    type: "hide-state",
+    visible: false,
+  });
 
   const [textCtx, setTextCtx] = useState<{
     isPublic: boolean;
@@ -22,33 +47,108 @@ function App() {
     },
     pass: "",
   });
+
+  useEffect(() => {
+    if (!modalCtx.visible) {
+      setDecryptCtx({
+        hasPass: false,
+        resultText: "",
+        passwordInput: "",
+      });
+    }
+  }, [modalCtx.visible]);
+
   return (
     <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
-      <Modal>
-        <button className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]">
-          <Copy />
-          Copy Again
-        </button>
-        <p>
-          Now you can paste it anywhere you want...{" "}
-          <span className="text-green-800">Whatsapp</span> or{" "}
-          <span className="text-pink-800">Instagram</span>... It's your choice.
-          The Reciever should unwrap the secret message using this app.
-          <br />
-          <div className="w-full h-[1px] bg-black/10 my-4"></div>
-          <pre className="text-black/20 italic font-bold flex font-[Roboto_Slab]">
-            Created by{" "}
-            <a
-              href="https://github.com/rinogodson"
-              target="_blank"
-              className="underline"
-            >
-              Rino Godson
-            </a>
-            <ArrowUpRight className="text-[#A8AAB0]" />
-          </pre>
-        </p>
-      </Modal>
+      <AnimatePresence>
+        {modalCtx.visible && (
+          <Modal
+            setModalCtx={setModalCtx}
+            modalCtx={modalCtx}
+            title={
+              !inputState
+                ? "Magic text copied to clipboard"
+                : "The Secret text inside:"
+            }
+          >
+            {!(modalCtx.type === "hide-state") ? (
+              <div>
+                <textarea
+                  placeholder={
+                    !decryptCtx.resultText ? "Enter the password." : ""
+                  }
+                  style={{ height: !decryptCtx.resultText ? "4em" : "10em" }}
+                  className="rounded-xl transition-all duration-75 resize-none bg-gray-400/50 w-full text-2xl p-3 mt-1 mb-2"
+                  onChange={(e) => {
+                    if (decryptCtx.resultText) {
+                      return;
+                    } else {
+                      setDecryptCtx((p: typeof decryptCtx) => ({
+                        ...p,
+                        passwordInput: e.target.value,
+                      }));
+                    }
+                  }}
+                  value={
+                    decryptCtx.resultText
+                      ? decryptCtx.resultText
+                      : decryptCtx.passwordInput
+                  }
+                />
+
+                {!decryptCtx.resultText && (
+                  <button
+                    onClick={() => {
+                      setDecryptCtx((p: typeof decryptCtx) => ({
+                        ...p,
+                        resultText: String(
+                          extractSecretText(bucket, decryptCtx.passwordInput),
+                        ),
+                      }));
+                    }}
+                    className="px-3 py-2 mb-2 text-xl w-full gap-2 bg-linear-to-b from-blue-500 to-blue-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-blue-500 sm:active:to-blue-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
+                  >
+                    <Lock />
+                    Unlock
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={() => {
+                    window.navigator.clipboard.writeText(bucket);
+                  }}
+                  className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
+                >
+                  <Copy />
+                  Copy Again
+                </button>
+                <div>
+                  Now you can paste it anywhere you want...{" "}
+                  <span className="text-green-400">Whatsapp</span> or{" "}
+                  <span className="text-pink-400">Instagram</span>... It's your
+                  choice. The Reciever should unwrap the secret message using
+                  this app.
+                  <br />
+                  <p className="w-full h-[1px] bg-black/10 my-4"></p>
+                  <pre className="text-white/60 italic font-bold flex font-[Roboto_Slab]">
+                    Created by{" "}
+                    <a
+                      href="https://github.com/rinogodson"
+                      target="_blank"
+                      className="underline"
+                    >
+                      Rino Godson
+                    </a>
+                    <ArrowUpRight className="text-[#A8AAB0]" />
+                  </pre>
+                </div>
+              </div>
+            )}
+          </Modal>
+        )}
+      </AnimatePresence>
       <div className="jacquard-24-regular text-[#E8F1FD] text-4xl sm:text-6xl sm:h-25 flex justify-center items-center">
         Ghost Ink
       </div>
@@ -57,6 +157,10 @@ function App() {
           <div
             onClick={() => {
               setInputState(false);
+              setModalCtx((p: typeof modalCtx) => ({
+                ...p,
+                type: "hide-state",
+              }));
             }}
             style={{
               color: inputState ? "white" : "#AEDEEC",
@@ -75,6 +179,10 @@ function App() {
           <div
             onClick={() => {
               setInputState(true);
+              setModalCtx((p: typeof modalCtx) => ({
+                ...p,
+                type: "reveal-state",
+              }));
             }}
             style={{
               color: !inputState ? "white" : "#AEDEEC",
@@ -129,6 +237,50 @@ function App() {
           style={{
             bottom: !inputState ? "-3.75em" : "calc(100% / 4)",
             width: !inputState ? "7.5em" : "10em",
+          }}
+          onClick={() => {
+            setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
+            if (!inputState) {
+              setBucket(
+                makeSecretText(
+                  textCtx.text.publicText,
+                  textCtx.text.privateText,
+                  textCtx.pass,
+                ),
+              );
+              window.navigator.clipboard.writeText(
+                makeSecretText(
+                  textCtx.text.publicText,
+                  textCtx.text.privateText,
+                  textCtx.pass,
+                ),
+              );
+              setTextCtx({
+                isPublic: true,
+                text: {
+                  publicText: "",
+                  privateText: "",
+                },
+                pass: "",
+              });
+            } else {
+              const updateText = async () => {
+                const newText = await window.navigator.clipboard.readText();
+                setBucket(newText);
+                if (doesItHaveAPasswordBro(newText)) {
+                  setDecryptCtx((p: typeof decryptCtx) => ({
+                    ...p,
+                    hasPass: true,
+                  }));
+                } else {
+                  setDecryptCtx((p: typeof decryptCtx) => ({
+                    ...p,
+                    hasPass: false,
+                  }));
+                }
+              };
+              updateText();
+            }
           }}
           className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin sm:hover:scale-110 sm:active:scale-90 active:scale-90 transition-all duration-200 cursor-pointer bg-no-repeat sm:active:brightness-200 active:brightness-200 sm:hover:brightness-110"
         ></motion.div>

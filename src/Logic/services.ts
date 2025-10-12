@@ -1,3 +1,91 @@
+const makeSecretText = (
+  publicText: string,
+  secretText: string,
+  pass: string | null,
+) => {
+  let isPass: boolean = false,
+    encryptedText: string = "",
+    zeroWidthSecretTextForAttaching: string = "",
+    zeroWidthPassword: string = "",
+    part1 = publicText.slice(0, 1),
+    part2 = publicText.slice(1, publicText.length - 1),
+    part3 = publicText.slice(publicText.length - 1, publicText.length);
+  console.log(part1, part2, part3);
+
+  if (pass) {
+    isPass = true;
+  }
+
+  if (isPass) {
+    encryptedText = encrypt(secretText, String(pass));
+  } else {
+    encryptedText = secretText;
+  }
+
+  zeroWidthSecretTextForAttaching = ZWSteg.encode(encryptedText);
+  if (isPass) {
+    zeroWidthPassword = ZWSteg.encode(String(pass));
+  }
+
+  if (isPass) {
+    return (
+      part1 +
+      "\u202c" +
+      zeroWidthSecretTextForAttaching +
+      part2 +
+      zeroWidthPassword +
+      part3
+    );
+  } else {
+    return part1 + "\u200c" + zeroWidthSecretTextForAttaching + part2 + part3;
+  }
+};
+
+const doesItHaveAPasswordBro = (text: string) => {
+  if (text[1] != "\u202c" && text[1] != "\u200c") return null;
+  const hasPass = text[1] === "\u202c";
+  return hasPass;
+};
+
+const extractSecretText = (text: string, pass: string) => {
+  if (text[1] != "\u202c" && text[1] != "\u200c") return null;
+  const hasPass = text[1] === "\u202c";
+  let firstNonZWIndex = 1;
+  for (let i = 1; i < text.length; i++) {
+    if (!"\u200c\u200D\u202C\uFEFF".includes(text[i])) {
+      firstNonZWIndex = i;
+      break;
+    }
+  }
+  const zeroWidthText = text.slice(2, firstNonZWIndex);
+
+  let lastNonZWIndex = 0;
+  if (hasPass) {
+    for (let i = text.length - 2; i > 0; i--) {
+      if (!"\u200c\u200D\u202C\uFEFF".includes(text[i])) {
+        lastNonZWIndex = i;
+        break;
+      }
+    }
+  }
+  const zeroWidthPassword = text.slice(lastNonZWIndex + 1, text.length - 1);
+
+  if (hasPass) {
+    const [unpackedText, unPackedPassword] = [
+      ZWSteg.decode(zeroWidthText),
+      ZWSteg.decode(zeroWidthPassword),
+    ];
+    if (pass == unPackedPassword) {
+      return decrypt(unpackedText, pass);
+    } else {
+      return null;
+    }
+  } else {
+    const unpackedText = ZWSteg.decode(zeroWidthText);
+    return unpackedText;
+  }
+};
+
 const generateCipher = (pass: string) => {
   const base =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,:;!?@#$/\\'\"()[]{}<>-_+=*%^&";
@@ -106,6 +194,12 @@ const ZWSteg: ZWSteg = {
   },
 };
 
-export { decrypt, encrypt, ZWSteg };
-
+export {
+  decrypt,
+  encrypt,
+  ZWSteg,
+  makeSecretText,
+  extractSecretText,
+  doesItHaveAPasswordBro,
+};
 // [isPass?\u202c:\u200c][secret text][Real text][pass?if any]
