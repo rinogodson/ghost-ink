@@ -25,7 +25,7 @@ function PasswordBox({
             if (e.target.value.length < 5)
               setTextCtx((p: typeof textCtx) => ({
                 ...p,
-                pass: e.target.value,
+                pass: e.target.value.toLowerCase(),
               }));
           }}
           type="text"
