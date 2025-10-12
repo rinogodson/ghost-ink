@@ -8,12 +8,23 @@ function App() {
   const [inputState, setInputState] = useState<boolean>(false);
   // false for hide and true for reveal
   //
+
+  const [textCtx, setTextCtx] = useState<{
+    isPublic: boolean;
+    text: { publicText: string; privateText: string };
+  }>({
+    isPublic: false,
+    text: {
+      publicText: "",
+      privateText: "",
+    },
+  });
   return (
     <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
       <div className="jacquard-24-regular text-[#E8F1FD] text-4xl sm:text-6xl sm:h-25 flex justify-center items-center">
         Ghost Ink
       </div>
-      <div className="gap-10 flex-col relative h-[calc(100%_-_10em)] sm:h-[calc(100%_-_14em)] w-full mt-10 sm:mt-0 sm:w-130 flex justify-start sm:pt-15 pt-5 items-center bg-white/5 border-3 border-[#AEDEEC] sm:rounded-b-[5em] rounded-b-[3em] sm:rounded-t-[8em] rounded-t-[5em] shadow-[inset_0_0_150px_rgba(174,222,236,0.3),_0_0_80px_0px_#AEDEEC] sm:shadow-[inset_0_0_150px_rgba(174,222,236,0.4),_0_0_300px_0px_rgba(174,222,236,0.8)]">
+      <div className="gap-10 flex-col relative h-[80%] sm:h-[calc(100%_-_14em)] w-full mt-2 sm:mt-0 sm:w-130 flex justify-start sm:pt-15 pt-5 items-center bg-white/5 border-3 border-[#AEDEEC] sm:rounded-b-[5em] rounded-b-[3em] sm:rounded-t-[8em] rounded-t-[5em] shadow-[inset_0_0_150px_rgba(174,222,236,0.3),_0_0_80px_0px_#AEDEEC] sm:shadow-[inset_0_0_150px_rgba(174,222,236,0.4),_0_0_300px_0px_rgba(174,222,236,0.8)]">
         <div className="sm:w-100 w-full sm:px-0 px-5 h-30 gap-5 sm:gap-10 grid grid-cols-2">
           <div
             onClick={() => {
@@ -86,13 +97,13 @@ function App() {
           )}
         </AnimatePresence>
 
-        <div
+        <motion.div
           style={{
             bottom: !inputState ? "-3.75em" : "calc(100% / 4)",
             width: !inputState ? "7.5em" : "10em",
           }}
-          className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin sm:hover:scale-110 active:scale-90 transition-all duration-400 cursor-pointer bg-no-repeat active:brightness-200 sm:hover:brightness-110"
-        ></div>
+          className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin sm:hover:scale-110 sm:active:scale-90 active:scale-90 transition-all duration-200 cursor-pointer bg-no-repeat sm:active:brightness-200 active:brightness-200 sm:hover:brightness-110"
+        ></motion.div>
       </div>
     </div>
   );
