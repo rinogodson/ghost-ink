@@ -91,7 +91,7 @@ function App() {
             bottom: !inputState ? "-3.75em" : "calc(100% / 4)",
             width: !inputState ? "7.5em" : "10em",
           }}
-          className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin hover:scale-110 active:scale-90 transition-all duration-400 cursor-pointer bg-no-repeat active:brightness-200 hover:brightness-110"
+          className="shadow-[0_0_50px_#AEDEEC,_inset_0_0_50px_rgba(255,255,255,0.3)] sm:hover:shadow-[0_0_100px_#AEDEEC] bg-[url(/orb.webp)] bg-contain rounded-full aspect-square absolute animate-spin sm:hover:scale-110 active:scale-90 transition-all duration-400 cursor-pointer bg-no-repeat active:brightness-200 sm:hover:brightness-110"
         ></div>
       </div>
     </div>
