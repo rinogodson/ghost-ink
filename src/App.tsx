@@ -13,7 +13,7 @@ function App() {
     isPublic: boolean;
     text: { publicText: string; privateText: string };
   }>({
-    isPublic: false,
+    isPublic: true,
     text: {
       publicText: "",
       privateText: "",
@@ -75,7 +75,7 @@ function App() {
               className="gap-8 flex flex-col origin-top"
             >
               <div className="h-fit w-full px-3 sm:w-100">
-                <TextBox />
+                <TextBox textCtx={textCtx} setTextCtx={setTextCtx} />
               </div>
               <div className="h-fit w-full px-3 sm:w-100 flex justify-center">
                 <PasswordBox />
