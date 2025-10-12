@@ -136,7 +136,7 @@ function App() {
                   <span className="text-green-400">Whatsapp</span> or{" "}
                   <span className="text-pink-400">Instagram</span>... It's your
                   choice. The Reciever should unwrap the secret message using
-                  this app.
+                  this app. Only use Desktop clients of these apps.
                   <br />
                   <p className="w-full h-[1px] bg-black/10 my-4"></p>
                   <pre className="text-white/60 italic font-bold flex font-[Roboto_Slab]">
@@ -233,6 +233,7 @@ function App() {
               transition={{ duration: 0.2 }}
               className="text-2xl text-white/50 origin-top"
             >
+              COPY THE MAGIC TEXT, and <br />
               Click the orb to
               <br />
               paste the copied text.
