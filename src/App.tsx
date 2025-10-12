@@ -75,9 +75,16 @@ function App() {
               <div>
                 <textarea
                   placeholder={
-                    !decryptCtx.resultText ? "Enter the password." : ""
+                    !decryptCtx.resultText && decryptCtx.hasPass
+                      ? "Enter the password."
+                      : ""
                   }
-                  style={{ height: !decryptCtx.resultText ? "4em" : "10em" }}
+                  style={{
+                    height:
+                      !decryptCtx.resultText && decryptCtx.hasPass
+                        ? "4em"
+                        : "10em",
+                  }}
                   className="rounded-xl transition-all duration-75 resize-none bg-gray-400/50 w-full text-2xl p-3 mt-1 mb-2"
                   onChange={(e) => {
                     if (decryptCtx.resultText) {
@@ -239,31 +246,45 @@ function App() {
             width: !inputState ? "7.5em" : "10em",
           }}
           onClick={() => {
-            setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
             if (!inputState) {
-              setBucket(
-                makeSecretText(
-                  textCtx.text.publicText,
-                  textCtx.text.privateText,
-                  textCtx.pass,
-                ),
-              );
-              window.navigator.clipboard.writeText(
-                makeSecretText(
-                  textCtx.text.publicText,
-                  textCtx.text.privateText,
-                  textCtx.pass,
-                ),
-              );
-              setTextCtx({
-                isPublic: true,
-                text: {
-                  publicText: "",
-                  privateText: "",
-                },
-                pass: "",
-              });
+              if (textCtx.pass.length < 4) {
+                if (textCtx.pass != "") {
+                  window.alert("Password must have 4 characters");
+                  return;
+                }
+              }
+              if (
+                !(
+                  textCtx.text.publicText === "" ||
+                  textCtx.text.privateText === ""
+                )
+              ) {
+                setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
+                setBucket(
+                  makeSecretText(
+                    textCtx.text.publicText,
+                    textCtx.text.privateText,
+                    textCtx.pass,
+                  ),
+                );
+                window.navigator.clipboard.writeText(
+                  makeSecretText(
+                    textCtx.text.publicText,
+                    textCtx.text.privateText,
+                    textCtx.pass,
+                  ),
+                );
+                setTextCtx({
+                  isPublic: true,
+                  text: {
+                    publicText: "",
+                    privateText: "",
+                  },
+                  pass: "",
+                });
+              }
             } else {
+              setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
               const updateText = async () => {
                 const newText = await window.navigator.clipboard.readText();
                 setBucket(newText);
@@ -276,6 +297,7 @@ function App() {
                   setDecryptCtx((p: typeof decryptCtx) => ({
                     ...p,
                     hasPass: false,
+                    resultText: String(extractSecretText(bucket, "")),
                   }));
                 }
               };
