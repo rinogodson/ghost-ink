@@ -369,7 +369,7 @@ function App() {
                   setDecryptCtx((p: typeof decryptCtx) => ({
                     ...p,
                     hasPass: false,
-                    resultText: String(extractSecretText(bucket, "")),
+                    resultText: String(extractSecretText(newText, "")),
                   }));
                 }
               };
