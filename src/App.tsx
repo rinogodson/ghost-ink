@@ -75,11 +75,11 @@ function App() {
     }
   }, [modalCtx.visible]);
 
-  const handleShare = async () => {
+  const handleShare = async (text: string) => {
     try {
       await window.navigator.share({
         title: "Choose the platform.",
-        text: bucket,
+        text: text,
       });
       console.log("Content shared successfully");
     } catch (error) {
@@ -88,7 +88,7 @@ function App() {
   };
 
   return (
-    <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
+    <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-0 pt-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
       <AnimatePresence>
         {modalCtx.visible && (
           <Modal
@@ -121,7 +121,7 @@ function App() {
                     } else {
                       setDecryptCtx((p: typeof decryptCtx) => ({
                         ...p,
-                        passwordInput: e.target.value,
+                        passwordInput: e.target.value.toLowerCase(),
                       }));
                     }
                   }}
@@ -153,7 +153,7 @@ function App() {
               <div>
                 {isMobile ? (
                   <button
-                    onClick={handleShare}
+                    onClick={() => handleShare(bucket)}
                     className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
                   >
                     <Share2 />
@@ -220,8 +220,8 @@ function App() {
       <div className="jacquard-24-regular text-[#E8F1FD] text-4xl sm:text-6xl sm:h-25 flex justify-center items-center">
         Ghost Ink
       </div>
-      <div className="gap-10 flex-col relative h-[85svh] sm:h-[calc(100%_-_14em)] w-full mt-2 sm:mt-0 sm:w-130 flex justify-start sm:pt-15 pt-5 items-center bg-white/5 border-3 border-[#AEDEEC] sm:rounded-b-[5em] rounded-b-[3em] sm:rounded-t-[8em] rounded-t-[5em] shadow-[inset_0_0_150px_rgba(174,222,236,0.3),_0_0_80px_0px_#AEDEEC] sm:shadow-[inset_0_0_150px_rgba(174,222,236,0.4),_0_0_300px_0px_rgba(174,222,236,0.8)]">
-        <div className="sm:w-100 w-full sm:px-0 px-5 h-30 gap-5 sm:gap-10 grid grid-cols-2">
+      <div className="gap-10 flex-col relative h-[85svh] sm:h-[calc(100%_-_14em)] w-full mt-2 sm:mt-0 sm:w-130 flex justify-start sm:pt-15 pt-5 items-center bg-black/20 sm:bg-white/5 sm:border-x-3 border-x-0 border-3 border-[#AEDEEC] sm:rounded-b-[5em] rounded-b-[0em] sm:rounded-t-[8em] rounded-t-[0em] shadow-[inset_0_0_150px_rgba(174,222,236,0.3),_0_0_80px_0px_#AEDEEC] sm:shadow-[inset_0_0_150px_rgba(174,222,236,0.4),_0_0_300px_0px_rgba(174,222,236,0.8)]">
+        <div className="sm:w-100 w-full sm:px-0 px-5 sm:h-30 h-25 gap-3 sm:gap-10 grid grid-cols-2">
           <div
             onClick={() => {
               setInputState(false);
@@ -329,13 +329,23 @@ function App() {
                     textCtx.pass,
                   ),
                 );
-                window.navigator.clipboard.writeText(
-                  makeSecretText(
-                    textCtx.text.publicText,
-                    textCtx.text.privateText,
-                    textCtx.pass,
-                  ),
-                );
+                if (!isMobile) {
+                  window.navigator.clipboard.writeText(
+                    makeSecretText(
+                      textCtx.text.publicText,
+                      textCtx.text.privateText,
+                      textCtx.pass,
+                    ),
+                  );
+                } else {
+                  handleShare(
+                    makeSecretText(
+                      textCtx.text.publicText,
+                      textCtx.text.privateText,
+                      textCtx.pass,
+                    ),
+                  );
+                }
                 setTextCtx({
                   isPublic: true,
                   text: {

@@ -28,7 +28,7 @@ function TextBox({
             ? "solid 3px rgba(255,255,255,0.2)"
             : "dashed 3px rgba(255,255,255,0.2)",
         }}
-        className="w-full h-40 text-white text-2xl transition-all duration-300 rounded-xl [corner-shape:_squircle] shadow-[inset_0px_1px_1px_1px_rgba(0,0,0,0.1)]"
+        className="w-full sm:h-40 text-white text-xl sm:text-2xl transition-all duration-300 rounded-xl [corner-shape:_squircle] shadow-[inset_0px_1px_1px_1px_rgba(0,0,0,0.1)]"
       >
         <textarea
           value={
@@ -59,12 +59,12 @@ function TextBox({
               setTextCtx((p: typeof textCtx) => ({
                 ...p,
                 text: textCtx.isPublic
-                  ? { ...p.text, publicText: newValue }
-                  : { ...p.text, privateText: newValue },
+                  ? { ...p.text, publicText: newValue.trim() }
+                  : { ...p.text, privateText: newValue.trim() },
               }));
             }
           }}
-          className="font-[Merriweather] w-full h-full p-5 resize-none"
+          className="font-[Merriweather] w-full h-full sm:p-5 p-4 resize-none"
           placeholder={
             textCtx.isPublic ? "Text Everyone sees." : "Secret text."
           }
