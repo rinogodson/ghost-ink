@@ -1,4 +1,4 @@
-import { ArrowUpRight, Copy, Eye, Feather, Lock } from "lucide-react";
+import { ArrowUpRight, Copy, Eye, Feather, Lock, Share2 } from "lucide-react";
 import PasswordBox from "./Components/PasswordBox/PasswordBox";
 import TextBox from "./Components/TextBox/TextBox";
 import { useEffect, useState } from "react";
@@ -10,10 +10,27 @@ import {
   doesItHaveAPasswordBro,
 } from "./Logic/services";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+}
+
 function App() {
   const [inputState, setInputState] = useState<boolean>(false);
   // false for hide and true for reveal
   //
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     window.navigator.clipboard.readText();
@@ -122,35 +139,67 @@ function App() {
               </div>
             ) : (
               <div>
-                <button
-                  onClick={() => {
-                    window.navigator.clipboard.writeText(bucket);
-                  }}
-                  className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
-                >
-                  <Copy />
-                  Copy Again
-                </button>
-                <div>
-                  Now you can paste it anywhere you want...{" "}
-                  <span className="text-green-400">Whatsapp</span> or{" "}
-                  <span className="text-pink-400">Instagram</span>... It's your
-                  choice. The Reciever should unwrap the secret message using
-                  this app. Only use Desktop clients of these apps.
-                  <br />
-                  <p className="w-full h-[1px] bg-black/10 my-4"></p>
-                  <pre className="text-white/60 italic font-bold flex font-[Roboto_Slab]">
-                    Created by{" "}
-                    <a
-                      href="https://github.com/rinogodson"
-                      target="_blank"
-                      className="underline"
-                    >
-                      Rino Godson
-                    </a>
-                    <ArrowUpRight className="text-[#A8AAB0]" />
-                  </pre>
-                </div>
+                {isMobile ? (
+                  <button
+                    onClick={() => {}}
+                    className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
+                  >
+                    <Share2 />
+                    Share
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      window.navigator.clipboard.writeText(bucket);
+                    }}
+                    className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
+                  >
+                    <Copy />
+                    Copy Again
+                  </button>
+                )}
+                {isMobile ? (
+                  <div>
+                    Now, Share it with whoever you like.
+                    <span className="text-green-400">Whatsapp</span> or{" "}
+                    <span className="text-pink-400">Instagram</span>... It's
+                    your choice. The Reciever should unwrap the secret message
+                    using this app. <br />
+                    <p className="w-full h-[1px] bg-black/10 my-4"></p>
+                    <pre className="text-white/60 italic font-bold flex font-[Roboto_Slab]">
+                      Created by{" "}
+                      <a
+                        href="https://github.com/rinogodson"
+                        target="_blank"
+                        className="underline"
+                      >
+                        Rino Godson
+                      </a>
+                      <ArrowUpRight className="text-[#A8AAB0]" />
+                    </pre>
+                  </div>
+                ) : (
+                  <div>
+                    Now you can paste it anywhere you want...{" "}
+                    <span className="text-green-400">Whatsapp</span> or{" "}
+                    <span className="text-pink-400">Instagram</span>... It's
+                    your choice. The Reciever should unwrap the secret message
+                    using this app. Only use Desktop clients of these apps.
+                    <br />
+                    <p className="w-full h-[1px] bg-black/10 my-4"></p>
+                    <pre className="text-white/60 italic font-bold flex font-[Roboto_Slab]">
+                      Created by{" "}
+                      <a
+                        href="https://github.com/rinogodson"
+                        target="_blank"
+                        className="underline"
+                      >
+                        Rino Godson
+                      </a>
+                      <ArrowUpRight className="text-[#A8AAB0]" />
+                    </pre>
+                  </div>
+                )}
               </div>
             )}
           </Modal>
