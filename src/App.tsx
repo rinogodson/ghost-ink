@@ -75,6 +75,18 @@ function App() {
     }
   }, [modalCtx.visible]);
 
+  const handleShare = async () => {
+    try {
+      await window.navigator.share({
+        title: "Choose the platform.",
+        text: bucket,
+      });
+      console.log("Content shared successfully");
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+
   return (
     <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
       <AnimatePresence>
@@ -141,7 +153,7 @@ function App() {
               <div>
                 {isMobile ? (
                   <button
-                    onClick={() => {}}
+                    onClick={handleShare}
                     className="px-3 py-2 mb-2 text-xl gap-2 bg-linear-to-b from-green-500 to-green-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-green-500 sm:active:to-green-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
                   >
                     <Share2 />
