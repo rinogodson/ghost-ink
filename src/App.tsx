@@ -4,6 +4,12 @@ import TextBox from "./Components/TextBox/TextBox";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Modal from "./Components/Modal/Modal";
+
+import { useWithSound } from "./Logic/useWithSound";
+import flip from "./Assets/flip.mp3";
+import reveal from "./Assets/reveal.mp3";
+import hide from "./Assets/hide.mp3";
+
 import {
   makeSecretText,
   extractSecretText,
@@ -87,6 +93,10 @@ function App() {
     }
   };
 
+  const flipSound = useWithSound(flip);
+  const revealSound = useWithSound(reveal);
+  const hideSound = useWithSound(hide);
+
   return (
     <div className="font-[Roboto_slab] overflow-hidden w-screen h-screen p-0 pt-2 sm:p-0 flex flex-col justify-start items-center sm:items-center">
       <AnimatePresence>
@@ -135,12 +145,20 @@ function App() {
                 {!decryptCtx.resultText && (
                   <button
                     onClick={() => {
-                      setDecryptCtx((p: typeof decryptCtx) => ({
-                        ...p,
-                        resultText: String(
+                      if (
+                        String(
                           extractSecretText(bucket, decryptCtx.passwordInput),
-                        ),
-                      }));
+                        ) !== "null"
+                      ) {
+                        setDecryptCtx((p: typeof decryptCtx) => ({
+                          ...p,
+                          resultText: String(
+                            extractSecretText(bucket, decryptCtx.passwordInput),
+                          ),
+                        }));
+
+                        revealSound.playSound();
+                      }
                     }}
                     className="px-3 py-2 mb-2 text-xl w-full gap-2 bg-linear-to-b from-blue-500 to-blue-600  rounded-[1.25rem] [corner-shape:_squircle] text-white flex justify-center items-center sm:hover:scale-105 sm:active:scale-100 active:scale-95 active:to-blue-500 sm:active:to-blue-500 cursor-pointer transition-all duration-200 shadow-[inset_0_0.5px_1px_0.5px_rgba(255,255,255,0.2),_0_1px_1px_0px_rgba(0,0,0,0.2)]"
                   >
@@ -279,7 +297,11 @@ function App() {
               className="gap-8 flex flex-col origin-top"
             >
               <div className="h-fit w-full px-3 sm:w-100">
-                <TextBox textCtx={textCtx} setTextCtx={setTextCtx} />
+                <TextBox
+                  flipSound={flipSound}
+                  textCtx={textCtx}
+                  setTextCtx={setTextCtx}
+                />
               </div>
               <div className="h-fit w-full px-3 sm:w-100 flex justify-center">
                 <PasswordBox textCtx={textCtx} setTextCtx={setTextCtx} />
@@ -354,6 +376,7 @@ function App() {
                   },
                   pass: "",
                 });
+                hideSound.playSound();
               }
             } else {
               setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
@@ -371,6 +394,7 @@ function App() {
                     hasPass: false,
                     resultText: String(extractSecretText(newText, "")),
                   }));
+                  revealSound.playSound();
                 }
               };
               updateText();
