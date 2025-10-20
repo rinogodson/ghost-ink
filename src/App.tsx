@@ -324,24 +324,24 @@ function App() {
                 setModalCtx((p: typeof modalCtx) => ({ ...p, visible: true }));
                 setBucket(
                   makeSecretText(
-                    textCtx.text.publicText,
-                    textCtx.text.privateText,
+                    textCtx.text.publicText.trim(),
+                    textCtx.text.privateText.trim(),
                     textCtx.pass,
                   ),
                 );
                 if (!isMobile) {
                   window.navigator.clipboard.writeText(
                     makeSecretText(
-                      textCtx.text.publicText,
-                      textCtx.text.privateText,
+                      textCtx.text.publicText.trim(),
+                      textCtx.text.privateText.trim(),
                       textCtx.pass,
                     ),
                   );
                 } else {
                   handleShare(
                     makeSecretText(
-                      textCtx.text.publicText,
-                      textCtx.text.privateText,
+                      textCtx.text.publicText.trim(),
+                      textCtx.text.privateText.trim(),
                       textCtx.pass,
                     ),
                   );

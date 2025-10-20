@@ -59,8 +59,8 @@ function TextBox({
               setTextCtx((p: typeof textCtx) => ({
                 ...p,
                 text: textCtx.isPublic
-                  ? { ...p.text, publicText: newValue.trim() }
-                  : { ...p.text, privateText: newValue.trim() },
+                  ? { ...p.text, publicText: newValue }
+                  : { ...p.text, privateText: newValue },
               }));
             }
           }}
